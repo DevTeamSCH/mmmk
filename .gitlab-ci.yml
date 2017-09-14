@@ -26,7 +26,6 @@ before_script:
   # Uncomment next line if your Django app needs a JS runtime:
   # - apt-get update -q && apt-get install nodejs -yqq
   - pip install -r requirements/development.txt
-
 # To get Django tests to work you may need to create a settings file using
 # the following DATABASES:
 # 
@@ -47,4 +46,5 @@ test:
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
+  - flake8 --max-line-length=125 --exclude=src/mmmk,migrations
   - python src/manage.py test
