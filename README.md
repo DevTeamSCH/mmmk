@@ -7,7 +7,7 @@
 
 1. python3 -m venv .venv
 2. source .venv
-3. pip install requirements/developmnet.txt
+3. pip install requirements/development.txt
 4. python3 src/manage.py runserver
 
 > TODO: Pontosabb leírás
