@@ -42,9 +42,17 @@ before_script:
 #
 # and then adding `--settings app.settings.ci` (or similar) to the test command
 
+stages:
+  - flake8
+  - test
+
+job1:
+  stage: flake8
+  script:
+    - flake8 --max-line-length=125 --exclude=src/mmmk,migrations
+
 test:
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
-  - flake8 --max-line-length=125 --exclude=src/mmmk,migrations
   - python src/manage.py test
