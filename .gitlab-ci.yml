@@ -43,11 +43,12 @@ before_script:
 # and then adding `--settings app.settings.ci` (or similar) to the test command
 
 stages:
-  - flake8
+  - lint
   - test
+  - coverage
 
-job1:
-  stage: flake8
+flake8:
+  stage: lint
   script:
     - flake8 --max-line-length=125 --exclude=src/mmmk,migrations
 
