@@ -100,3 +100,6 @@ ENV/
 
 # KDE
 .directory
+
+*.sqlite3
+*.pyc

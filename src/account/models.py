@@ -92,29 +92,26 @@ class EmailConfirm(models.Model):
             obj.new_email = new_email
             obj.activation_code = code
         except EmailConfirm.DoesNotExist:
-            obj = cls(profile=profile,
-                      new_email=new_email,
-                      activation_code=code)
+            obj = cls(profile=profile, new_email=new_email, activation_code=code)
 
         url = reverse('activate', kwargs={'activation_code': code})
         url = request.build_absolute_uri(url)
-        msg = ("Szia!\n"
-               "\n"
-               "Sikeresen regisztráltál az MMMK weboldalára!\n"
-               "Fiókod aktiválásához a lenti linket tudod használni.\n"
-               "Mielőtt elkezdenél próbálni,"
-               " mindenképpen olvasd el a szabályzatot!\n"
-               "Jó próbálást és sikeres félévet kívánunk!\n"
-               "\n"
-               "A Muzsika Mívelő Mérnökök Klubja\n"
-               "\n"
-               "Aktiválólink: %s" % url)
+        msg = (
+           "Szia!\n"
+           "\n"
+           "Sikeresen regisztráltál az MMMK weboldalára!\n"
+           "Fiókod aktiválásához a lenti linket tudod használni.\n"
+           "Mielőtt elkezdenél próbálni,"
+           " mindenképpen olvasd el a szabályzatot!\n"
+           "Jó próbálást és sikeres félévet kívánunk!\n"
+           "\n"
+           "A Muzsika Mívelő Mérnökök Klubja\n"
+           "\n"
+           "Aktiválólink: %s" % url
+          )
 
         send_mail(
-            'mmmk e-mail megerősítés',
-            msg,
-            settings.SERVER_EMAIL,
-            [new_email],
+            'mmmk e-mail megerősítés', msg, settings.SERVER_EMAIL, [new_email],
         )
 
         return obj
