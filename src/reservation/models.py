@@ -21,12 +21,10 @@ class Period(models.Model):
 
     @staticmethod
     def get_active_period():
-
+        # TODO: aktiv = kezdo ido =< most =< idoszak vege
         result = Period.objects.filter(is_active=True)
-        if len(result) == 0:
+        if len(result) == 0 or len(result) > 1:
             return None
-        elif len(result) > 1:
-            pass  # TODO: Nagyon nagy baj van
         else:
             return result[0]
 
@@ -48,10 +46,12 @@ class Period(models.Model):
 
     @property
     def actual_week_num(self):
-        return (date.today() - self.start).days/7
+        return (date.today() - self.start).weeks
+        # ezt itt atirtuk weeksre, remeljuk, mukodik
 
     def get_week(self, num):
         result = self.weeks.filter(number=num)
+        # a selfnek honnan van weeks/e<
 
         if len(result) == 0:
             return None
@@ -156,20 +156,6 @@ class Reservation(models.Model):
 
             self.delete()
 
-    def to_dict(self):  # NOTE: ha valakinek jut eszebe jobb nev, akkor irja at
-        return {"reserver_name": self.reserver_name,
-                "reserver_id": self.reserver_id,
-                "reservation_type": self.type,
-                "allower_name": (self.allower.profile.full_name
-                                 if self.allower is not None
-                                 else "nincs beengedő"),
-                "allower_id": (self.allower.id
-                               if self.allower is not None else ""),
-                "is_conditional": self.is_conditional,
-                "day": self.day if self.day_num is not None else None,
-                "id": self.id,
-                }
-
     def clean(self):
 
         cond1 = self.user is not None and self.unique_message is not None
@@ -179,7 +165,7 @@ class Reservation(models.Model):
         i = len(list(filter(None, (cond1, cond2, cond3))))
 
         if i != 1:
-            raise ValidationError("Rossz tulajdonos konfiguraáció.")
+            raise ValidationError("Rossz tulajdonos konfiguráció.")
 
         if self.week is None:
             raise ValidationError("A foglalás nem tartozik egyik héthez sem.")
@@ -187,21 +173,17 @@ class Reservation(models.Model):
         if not self.week.is_active:
             raise ValidationError("Csak aktív hétre foglalhatsz.")
 
-        res_time = (datetime.combine(self.week.start, time()) +
-                    timedelta(days=self.day_num, hours=self.hour_num))
+        res_time = (datetime.combine(self.week.start, time()) + timedelta(days=self.day_num, hours=self.hour_num))
 
         if res_time < datetime.now():
             raise ValidationError("Múltbeli időpontra nem foglalhatsz.")
 
-        start_time = (datetime.combine(self.week.start, time()) +
-                      timedelta(hours=8))
-        end_time = (datetime.combine(self.week.end, time()) +
-                    timedelta(hours=24))
+        start_time = (datetime.combine(self.week.start, time()) + timedelta(hours=8))
+        end_time = (datetime.combine(self.week.end, time()) + timedelta(hours=24))
         if res_time < start_time or res_time > end_time:
             raise ValidationError("Az adott időpontra nem foglalhatsz.")
 
-        if any(map(lambda r: (r.day_num == self.day_num and
-                              r.hour_num == self.hour_num),
+        if any(map(lambda r: (r.day_num == self.day_num and r.hour_num == self.hour_num),
                    self.week.reservations.exclude(id=self.id))):
 
             raise ValidationError("Ez az időpont mar foglalt.")

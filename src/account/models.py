@@ -22,47 +22,37 @@ class Profile(models.Model):
     def is_payed(self):
         period = Period.get_active_period()
         try:
-            payment = self.payments.get(period=period)
+            subscription = self.subscriptions.get(period=period)
         except:
             return False  # NOTE: mint az is_subscribedq-nel
 
-        return payment is not None and payment.confirmed
+        return subscription is not None and subscription.confirmed
 
     @property
     def is_subscribed(self):
         period = Period.get_active_period()
-        try:
-            payment = self.payments.get(period=period)
-        except:
-            return False  # NOTE: problema lehet ha tobszor van bent a fizetes
+        subscription = self.subscriptions.get(period=period)
 
-        return payment is not None
+        return subscription is not None
 
     @property
     def has_band(self):
         return self.user.bands.count() > 0
 
-    @property
-    def full_name(self):
-        return "%s %s" % (self.user.last_name, self.user.first_name)
-
-    def confirm_payment(self):
+    def confirm_subscription(self):
         period = Period.get_active_period()
-        try:
-            payment = self.payments.get(period=period)
-            payment.confirmed = True
-            payment.save()
-        except:
-            pass  # NOTE: problema lehet ha tobszor van bent a fizetes
+        subscription = self.subscriptions.get(period=period)
+        subscription.confirmed = True
+        subscription.save()
 
     def subscribe_to_active_period(self):
-        from payment.models import Payment
+        from subscription.models import Subscription
 
         period = Period.get_active_period()
         if period is None:
             return
 
-        Payment.create(self, period)
+        Subscription.create(self, period)
 
     def is_band_id(self, id):
         return any(map(lambda band: band.id == id, self.user.bands.all()))

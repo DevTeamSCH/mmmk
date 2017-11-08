@@ -11,20 +11,20 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('payment', '0001_initial'),
+        ('subscription', '0001_initial'),
         ('reservation', '0001_initial'),
         ('account', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='payment',
+            model_name='subscription',
             name='period',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='payments', to='reservation.Period'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, related_name='subscriptions', to='reservation.Period'),
         ),
         migrations.AddField(
-            model_name='payment',
+            model_name='subscription',
             name='profile',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='payments', to='account.Profile'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subscriptions', to='account.Profile'),
         ),
     ]

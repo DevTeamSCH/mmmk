@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     'instrument',
     'karaoke',
     'page',
-    'payment',
+    'subscription',
     'reservation',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
