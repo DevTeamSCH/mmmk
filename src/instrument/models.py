@@ -8,3 +8,5 @@ class Instrument(models.Model):
     description = models.TextField(blank=True)
     user = models.ForeignKey(User, related_name='instruments', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name

@@ -1,10 +1,9 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 
 from . import models
 
 
-class InstrumentSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = models.Instrument
-            fields = '__all__'
+class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Instrument
+        fields = ('url', 'name', 'type', 'description', 'user')

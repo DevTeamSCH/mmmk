@@ -9,5 +9,5 @@ from . import views
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'', views.ProfileViewSet)
 
-app_name = apps.AccountConfig.name
+#app_name = apps.AccountConfig.name
 urlpatterns = router.urls
