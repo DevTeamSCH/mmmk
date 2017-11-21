@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
+
 from rest_framework import viewsets
 
-from instrument.serializers import InstrumentSerializer
 from . import serializers
 
 class ProfileViewSet(viewsets.ReadOnlyModelViewSet):
